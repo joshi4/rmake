@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"os/user"
 	"strings"
 )
@@ -20,21 +21,33 @@ func main() {
 	cwd, err := os.Getwd()
 	if err != nil {
 		// throw hail mary and pass args to make directly
-		panic(err)
+		execMake(args, cwd)
 	}
 
 	cu, err := user.Current()
 	if err != nil {
 		// throw hail mary and pass args to make directly
-		panic(err)
+		execMake(args, cwd)
 	}
 	// TODO: wrap in a single mkPath type
 	mkDir, _ := findMakefile(cwd, cu.HomeDir)
 	// set mkPath as cwd for exec.Command
 	if mkDir == "" {
 		// hail mary on dir the cwd
+		execMake(args, cwd)
 	}
-	fmt.Println(mkDir)
+	execMake(args, mkDir)
+}
+
+func execMake(args []string, dir string) {
+	cmd := exec.Command("make", args...)
+	cmd.Dir = dir
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	if err := cmd.Run(); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func findMakefile(start, end string) (string, string) {
