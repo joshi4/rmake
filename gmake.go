@@ -22,12 +22,14 @@ func main() {
 	if err != nil {
 		// throw hail mary and pass args to make directly
 		execMake(args, cwd)
+		return
 	}
 
 	cu, err := user.Current()
 	if err != nil {
 		// throw hail mary and pass args to make directly
 		execMake(args, cwd)
+		return
 	}
 	// TODO: wrap in a single mkPath type
 	mkDir, _ := findMakefile(cwd, cu.HomeDir)
@@ -35,8 +37,10 @@ func main() {
 	if mkDir == "" {
 		// hail mary on dir the cwd
 		execMake(args, cwd)
+		return
 	}
 	execMake(args, mkDir)
+	return
 }
 
 func execMake(args []string, dir string) {
