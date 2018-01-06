@@ -10,6 +10,17 @@
 
 This process is repeated till a Makefile is found or till the user's home directory is reached at which point `gmake` will return an error.
 
+## Install
+
+Install `gmake` by running the following command in your shell.
+
+~~~sh
+go get github.com/joshi4/gmake
+~~~
+
+To install `go` and setup the work environment see [this link](https://golang.org/doc/install#install).
+
+**NOTE:** Make sure you've set the `GOPATH` variable correctly :)
 
 ## Motivation
 
