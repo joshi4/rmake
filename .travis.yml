@@ -1,0 +1,13 @@
+language: go
+go:
+  - 1.9.2
+
+script:
+  make build &&
+  mkdir -p ./test/nested/dir &&
+  cd ./test/nested/dir &&
+  ./gmake build
+
+notifications:
+  email: false
+
