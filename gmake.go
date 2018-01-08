@@ -65,7 +65,7 @@ func findMakefile(start, end string) (string, string) {
 	}
 
 	for _, f := range files {
-		// guard against dirs named Makefile etc.
+		// ignore all directories
 		if f.IsDir() {
 			continue
 		}
