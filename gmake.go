@@ -20,22 +20,20 @@ func main() {
 	_ = args
 	cwd, err := os.Getwd()
 	if err != nil {
-		// throw hail mary and pass args to make directly
+		// hail mary
 		execMake(args, cwd)
 		return
 	}
 
 	cu, err := user.Current()
 	if err != nil {
-		// throw hail mary and pass args to make directly
 		execMake(args, cwd)
+		// hail mary
 		return
 	}
-	// TODO: wrap in a single mkPath type
-	mkDir, _ := findMakefile(cwd, cu.HomeDir)
-	// set mkPath as cwd for exec.Command
+	mkDir := findMakefile(cwd, cu.HomeDir)
 	if mkDir == "" {
-		// hail mary on dir the cwd
+		// hail mary
 		execMake(args, cwd)
 		return
 	}
@@ -54,14 +52,15 @@ func execMake(args []string, dir string) {
 	}
 }
 
-func findMakefile(start, end string) (string, string) {
+func findMakefile(start, end string) string {
+	// exit if we've traversed beyond end
 	if len(start) < len(end) {
-		return "", ""
+		return ""
 	}
 
 	files, err := ioutil.ReadDir(start)
 	if err != nil {
-		return "", ""
+		return ""
 	}
 
 	for _, f := range files {
@@ -71,13 +70,9 @@ func findMakefile(start, end string) (string, string) {
 		}
 
 		switch f.Name() {
-		// lookup order from: https://www.gnu.org/software/make/manual/html_node/Makefile-Names.html
-		case GNUMakefile:
-			return start, GNUMakefile
-		case Makefile:
-			return start, Makefile
-		case makefile:
-			return start, makefile
+		// from: https://www.gnu.org/software/make/manual/html_node/Makefile-Names.html
+		case GNUMakefile, Makefile, makefile:
+			return start
 		}
 	}
 
