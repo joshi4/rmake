@@ -3,10 +3,10 @@ go:
   - 1.9.2
 
 script:
-  make build &&
+  make test &&
   mkdir -p ./test/nested/dir &&
   cd ./test/nested/dir &&
-  ./gmake build
+  ./gmake test
 
 notifications:
   email: false

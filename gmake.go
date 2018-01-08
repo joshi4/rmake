@@ -17,7 +17,7 @@ const (
 
 func main() {
 	args := os.Args[1:]
-	_ = args
+
 	cwd, err := os.Getwd()
 	if err != nil {
 		// hail mary
@@ -28,12 +28,11 @@ func main() {
 	cu, err := user.Current()
 	if err != nil {
 		execMake(args, cwd)
-		// hail mary
 		return
 	}
+
 	mkDir := findMakefile(cwd, cu.HomeDir)
 	if mkDir == "" {
-		// hail mary
 		execMake(args, cwd)
 		return
 	}
@@ -77,5 +76,9 @@ func findMakefile(start, end string) string {
 	}
 
 	idx := strings.LastIndex(start, string(os.PathSeparator))
+	// be defensive
+	if idx == -1 {
+		return ""
+	}
 	return findMakefile(start[:idx], end)
 }
