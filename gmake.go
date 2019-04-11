@@ -13,7 +13,15 @@ const (
 	GNUMakefile = "GNUMakefile"
 	Makefile    = "Makefile"
 	makefile    = "makefile"
+	makeSh      = "make.sh"
 )
+
+var fileToCommand = map[string]string{
+	GNUMakefile: "make",
+	Makefile:    "make",
+	makefile:    "make",
+	makeSh:      "./make.sh",
+}
 
 func main() {
 	args := os.Args[1:]
@@ -21,27 +29,31 @@ func main() {
 	cwd, err := os.Getwd()
 	if err != nil {
 		// hail mary
-		execMake(args, cwd)
+		execMake(args, cwd, "")
 		return
 	}
 
 	cu, err := user.Current()
 	if err != nil {
-		execMake(args, cwd)
+		execMake(args, cwd, "")
 		return
 	}
 
-	mkDir := findMakefile(cwd, cu.HomeDir)
+	mkDir, fname := findMakefile(cwd, cu.HomeDir)
 	if mkDir == "" {
-		execMake(args, cwd)
+		execMake(args, cwd, fname)
 		return
 	}
-	execMake(args, mkDir)
+	execMake(args, mkDir, fname)
 	return
 }
 
-func execMake(args []string, dir string) {
-	cmd := exec.Command("make", args...)
+func execMake(args []string, dir, fname string) {
+	c := fileToCommand[fname]
+	if c == "" {
+		c = "make"
+	}
+	cmd := exec.Command(c, args...)
 	cmd.Dir = dir
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
@@ -51,15 +63,15 @@ func execMake(args []string, dir string) {
 	}
 }
 
-func findMakefile(start, end string) string {
+func findMakefile(start, end string) (string, string) {
 	// exit if we've traversed beyond end
 	if len(start) < len(end) {
-		return ""
+		return "", ""
 	}
 
 	files, err := ioutil.ReadDir(start)
 	if err != nil {
-		return ""
+		return "", ""
 	}
 
 	for _, f := range files {
@@ -70,15 +82,21 @@ func findMakefile(start, end string) string {
 
 		switch f.Name() {
 		// from: https://www.gnu.org/software/make/manual/html_node/Makefile-Names.html
-		case GNUMakefile, Makefile, makefile:
-			return start
+		case GNUMakefile:
+			return start, GNUMakefile
+		case Makefile:
+			return start, Makefile
+		case makefile:
+			return start, makefile
+		case makeSh:
+			return start, makeSh
 		}
 	}
 
 	idx := strings.LastIndex(start, string(os.PathSeparator))
 	// be defensive
 	if idx == -1 {
-		return ""
+		return "", ""
 	}
 	return findMakefile(start[:idx], end)
 }
