@@ -1,5 +1,5 @@
 build:
-	go build -o test/nested/dir/gmake github.com/joshi4/gmake
+	go build -o test/nested/dir/rmake github.com/joshi4/rmake
 
 test: build
 	go test -v ./...

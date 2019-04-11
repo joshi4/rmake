@@ -6,7 +6,7 @@ script:
   make test &&
   mkdir -p ./test/nested/dir &&
   cd ./test/nested/dir &&
-  ./gmake test
+  ./rmake test
 
 notifications:
   email: false

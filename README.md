@@ -1,25 +1,25 @@
-# gmake
+# rmake
 
 ## Demo
 
-![Demo](https://github.com/joshi4/gmake/raw/master/demo.gif)
+![Demo](https://github.com/joshi4/rmake/raw/master/demo.gif)
 
 ## Usage
 
-`gmake` is a wrapper around make written in Go.
+`rmake` is a wrapper around make written in Go.
 
-`gmake` invokes make with any arguments that it was passed.
+`rmake` invokes make with any arguments that it was passed.
 
-`gmake` looks for a Makefile in the current working directory, if none is found it moves up to the parent directory.
+`rmake` looks for a Makefile in the current working directory, if none is found it moves up to the parent directory.
 
-This process is repeated till a Makefile is found or till the user's home directory is reached at which point `gmake` will make a best effort call to make from the original directory in which `gmake` was called
+This process is repeated till a Makefile is found or till the user's home directory is reached at which point `rmake` will make a best effort call to make from the original directory in which `rmake` was called
 
 ## Install
 
-Install `gmake` by running the following command in your shell.
+Install `rmake` by running the following command in your shell.
 
 ~~~sh
-go get github.com/joshi4/gmake
+go get github.com/joshi4/rmake
 ~~~
 
 To install `go` and setup the work environment see [this link](https://golang.org/doc/install#install).
@@ -38,8 +38,8 @@ make provides a -C flag which accepts the path to the make file but that defeats
 
 Using your bash history reduces the pain of repeating the -C flag, however, that fails when you have to switch amongst different repos/makefiles quite frequently.
 
-Infact, using `gmake` will make it possible to use your bash history more consistently as `gmake test` or `gmake build` are common enough and the -C flag is abstracted away
+Infact, using `rmake` will make it possible to use your bash history more consistently as `rmake test` or `rmake build` are common enough and the -C flag is abstracted away
 
 ## Testing
 
-We have a simple end to end test for gmake in CI. Please see the `.travis.yml` file
+We have a simple end to end test for rmake in CI. Please see the `.travis.yml` file
