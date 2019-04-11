@@ -1,9 +1,5 @@
 # rmake
 
-## Demo
-
-![Demo](https://github.com/joshi4/rmake/raw/master/demo.gif)
-
 ## Usage
 
 `rmake` is a wrapper around make written in Go.
